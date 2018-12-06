@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
     // Distribute maxpower to slaves
     MPI_Bcast(&maxpower,1,MPI_INT,ROOT,MPI_COMM_WORLD);
 
-    printf("\nCheckpoint\n");
+    printf("Checkpoint\n");
 
 /*******PREPROCESSING************************************************************/
     
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
         mainpower++;
     }
 
-    
+
 
 
 

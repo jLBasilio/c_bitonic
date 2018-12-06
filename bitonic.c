@@ -3,57 +3,53 @@
 #include <time.h>
 #include <math.h>
 #include <limits.h>
-#include <mpi.h>
-
-
-#define DEF_SIZE 16
-
-int main(int argc, char *argv[]){
-	MPI_Init(&argc, &argv);
-
-	int *matrix;
-	     matrixsize, powersize,
-	     i,j,k,l,m,
-
-	     ownnumber, pairnumber,
-
-	     maxpower1, preprocessorouterloop, preprocessorinnerloop,
-
-	     csize, crank, cnamelen;
-	char cname[MPI_MAX_PROCESSOR_NAME];
-
-	// Fetch matrix size, and power size
-	if(argc == 2) matrixsize=strtol(argv[1],NULL,10);
-	else matrixsize= DEF_SIZE;
-	while(1){
-		maxpower=1;
-		if(matrixsize<=pow(2,maxpower)){
-			powersize=pow(2,maxpower);
-			break;	
-		}
-		maxpower++;
-	}
-	preprocessorouterloop = maxpower-1; // hindi to nagbabago
-	preprocessorinnerloop = 1;	//nagiincrement by one
-	preprocessorinnerinnerloop = preprocessorinnerloop; //decrement by one
-
-	matrix = malloc(powersize*sizeof(*matrix));
-	for(i=0;i<powersize;i++){
-		if(i<matrixsize) matrix[i] = rand()%matrixsize+1;
-		else matrix[i] = INT_MAX;
-	}
-
-/***************************************************************************
-** PREPROCESSING
-***************************************************************************/
 
 
 
+int main() {
 
 
+  int arrayOfInts[] = {3, 5, 8, 9, 10, 12, 14, 20, 95, 60, 40, 35, 23, 18, 0};
+  int arrayLen = 16;
 
-	MPI_Comm_size(			&csize, MPI_COMM_WORLD);
-	MPI_Comm_rank(			&crank, MPI_COMM_WORLD);
-	MPI_Get_processor_name(	cname, 	cnamelen);
+  int noIterations = (int) log2(arrayLen);
+
+  int i, j, halfLen, temp, jumpIndex;
+
+  halfLen = arrayLen/2;
+
+
+  for(i = 0; i < arrayLen; i++)
+    printf("%d ", arrayOfInts[i]);
+  printf("\n");
+
+
+  jumpIndex = halfLen;
+  for(i = 0; i < noIterations; i++) {
+
+    j = 0;
+    while((j + pairIndex) != halfLen - 1) {
+
+
+      
+
+
+      
+    }
+  jumpIndex /= 2;
+
+  }
+
+
+  for(i = 0; i < arrayLen; i++)
+    printf("%d ", arrayOfInts[i]);
+  printf("\n");
+
+
+  return 0;
+
 
 }
+
+
+
