@@ -9,61 +9,62 @@
 #define ROOT 0
 
 int main(int argc, char *argv[]){
-    MPI_Init(&argc,&argv);
+  MPI_Init(&argc,&argv);
+
+  int *vector,
+  msize, psize,
+  i=0,j,k,l,m,n,
+
+  //Preprocessing variables
+  maxpower=0, mainpower=1,
+  members, issrc, prank,isplus,
+
+  //Slave variables
+  ownnum, pairnum,
+  ascending,
+
+  //MPI variables
+  csize,crank,cnamelen;
+  char cname[MPI_MAX_PROCESSOR_NAME];
+
+  //Fetch MPI details
+  MPI_Comm_size(MPI_COMM_WORLD,&csize);
+  MPI_Comm_rank(MPI_COMM_WORLD,&crank);
+  MPI_Get_processor_name(cname,&cnamelen);
+
+  printf("%s rank:%d\n", cname, crank);
 
 
+  //Root procedures
+  if(crank==ROOT){
 
-    int *vector,
-        msize, psize,
-        i=0,j,k,l,m,n,
+    //Fetch vector size, power size
+    msize = (argc >= 2) ? strtol(argv[1], NULL, 10) : DEF_SIZE;
 
-    //Preprocessing variables
-        maxpower=0, mainpower=1,
-        members, issrc, prank,isplus,
+    while(++maxpower){
+      printf("maxpower: %d\n",maxpower);
+      if(msize <= pow(2, maxpower)){
+        psize = pow(2, maxpower);
+        break;
+      }
+    } 
 
-    //Slave variables
-        ownnum, pairnum,
-        ascending,
+    //Fetch whether ascending or descending sort
+    ascending = (argc >= 3) ? strtol(argv[2], NULL,10) : 1;
 
-    //MPI variables
-        csize,crank,cnamelen;
-    char cname[MPI_MAX_PROCESSOR_NAME];
+    //generate vector in power size
+    vector = malloc(psize*sizeof(*vector));
+    for(i=0;i<psize;i++) vector[i] = (i<msize) ? rand()%msize+1 : INT_MAX;
 
-    //Fetch MPI details
-    MPI_Comm_size(MPI_COMM_WORLD,&csize);
-    MPI_Comm_rank(MPI_COMM_WORLD,&crank);
-    MPI_Get_processor_name(cname,&cnamelen);
-
-    printf("%s rank:%d\n", cname, crank);
-
-
-    //Root procedures
-    if(crank==ROOT){
-        //Fetch vector size, power size
-        msize=(argc>=2)?strtol(argv[1],NULL,10):DEF_SIZE;
-        while(++maxpower){
-            printf("maxpower:%d\n",maxpower);
-            if(msize<=pow(2,maxpower)){
-                psize = pow(2,maxpower);
-                break;
-            } 
-        }   
-
-        //Fetch whether ascending or descending sort
-        ascending=(argc>=3)?strtol(argv[2],NULL,10):1;
-
-        //generate vector in power size
-        vector = malloc(psize*sizeof(*vector));
-        for(i=0;i<psize;i++) vector[i] = (i<msize) ? rand()%msize+1 : INT_MAX;
-
-        for(i=0;i<psize;i++){
-            printf("%d ", vector[i]);
-        }
-        printf("\n\n");
+    for(i=0;i<psize;i++){
+        printf("%d ", vector[i]);
     }
+    printf("\n\n");
+  }
 
     // Distribute vector to slaves' ownnum
     MPI_Scatter(vector,1,MPI_INT,&ownnum,1,MPI_INT,ROOT,MPI_COMM_WORLD);
+    
     // Distribute maxpower to slaves
     MPI_Bcast(&maxpower,1,MPI_INT,ROOT,MPI_COMM_WORLD);
 
